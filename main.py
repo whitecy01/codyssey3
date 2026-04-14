@@ -142,14 +142,14 @@ def normalize_filters(raw_filters: Dict) -> Dict[int, Dict[str, Matrix]]:
         if not size_key.startswith("size_"):
             raise ValueError(f"필터 키 형식 오류: {size_key}")
         size = int(size_key.split("_")[1])
-        if not isinstance(filter_entry, dict):
+        if not isinstance(filter_entry, dict): # filter_entry가 dict 타입인지 확인하는 코드
             raise ValueError(f"필터 스키마 오류: {size_key}")
 
         normalized[size] = {}
         for raw_label, matrix in filter_entry.items():
-            label = normalize_filter_label(raw_label)
-            validate_matrix(matrix, size)
-            normalized[size][label] = matrix
+            label = normalize_filter_label(raw_label) # cross -> Cross, x -> X
+            validate_matrix(matrix, size) # size x size 크기인지 검사
+            normalized[size][label] = matrix # normalized[5]["Cross"] = ... 같은 형태
 
         if set(normalized[size].keys()) != set(STANDARD_LABELS):
             raise ValueError(f"{size_key} 필터는 cross/x 두 종류를 모두 포함해야 합니다.")
